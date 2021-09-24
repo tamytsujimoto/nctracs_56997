@@ -3,8 +3,7 @@ library(gtsummary)
 
 # LOADING DATASET
 
-db <- 
-  readRDS("brain.rds")
+db <- readRDS("brain.rds")
 
 ##########################
 # TABLE 1 - DEMOGRAPHICS #
@@ -34,7 +33,7 @@ tab1_dem <-
                            ethnicity ~ "Ethnicity",
                            #cognitive_status ~ "COGNITIVE STATUS",
                            cognitive_status_num ~ "Cognitive Status",
-                           braak06 ~ "Braak6 Score",
+                           braak06 ~ "Braak6 Stage",
                            pmi ~ "PMI (minutes)",
                            ad_npath_score ~ "AD Neuropath score",
                            amy_angi ~ "Amyloid Angiopathy",
@@ -49,7 +48,10 @@ tab1_dem <-
                            a_score ~ "A Score",
                            a_thal_score ~ "A Score (Thal)",
                            b_score ~ "B Score (Braak)",
-                           c_score ~ "C Score (CERAD)")
+                           c_score ~ "C Score (CERAD)"),
+              type = list(all_continuous() ~ "continuous2",
+                          all_dichotomous() ~ "categorical"),
+              statistic = all_continuous2() ~ c("{mean} ({sd})", "{median} ({p25}, {p75})", "{min}, {max}")
                            ) %>% 
   bold_labels()
 
@@ -86,7 +88,7 @@ p_hist_log <-
   scale_y_continuous(name ="Count") 
 
 ggpubr::ggarrange(p_hist,p_hist_log, ncol=2, nrow=1)
-ggsave('Output/hist.png', height=6, width=10)
+ggsave("Output/hist.png", height=6, width=10)
 
 # SCATTER PLOT #
 
@@ -96,7 +98,7 @@ p_scat <-
   geom_point() +
   geom_smooth() +
   theme_bw() +
-  scale_x_continuous(name ="Braak6 Score") + 
+  scale_x_continuous(name ="Braak6 Stage", breaks = 1:6) + 
   scale_y_continuous(name ="All Density Avg (mm2)") 
 
 p_scat_log <- 
@@ -105,11 +107,11 @@ p_scat_log <-
   geom_point() +
   geom_smooth() +
   theme_bw() +
-  scale_x_continuous(name ="Braak6 Score") + 
+  scale_x_continuous(name ="Braak6 Stage", breaks = 1:6) + 
   scale_y_continuous(name ="Log(All Density Avg (mm2))") 
 
 ggpubr::ggarrange(p_scat,p_scat_log, ncol=2, nrow=1)
-ggsave('Output/scatter.png', height=6, width=10)
+ggsave("Output/scatter.png", height=6, width=10)
 
 # BOX PLOT #
 
@@ -119,7 +121,7 @@ p_box <-
   ggplot(aes(x = factor(braak06), y = dens_avg)) +
   geom_boxplot() +
   theme_bw() +
-  scale_x_discrete(name ="Braak6 Score") + 
+  scale_x_discrete(name ="Braak6 Stage") + 
   scale_y_continuous(name ="All Density Avg (mm2)") 
 
 p_box_log <- 
@@ -129,11 +131,11 @@ p_box_log <-
   geom_boxplot() +
   geom_smooth() +
   theme_bw() +
-  scale_x_discrete(name ="Braak6 Score") + 
+  scale_x_discrete(name ="Braak6 Stage") + 
   scale_y_continuous(name ="Log(All Density Avg (mm2))") 
 
 ggpubr::ggarrange(p_box,p_box_log, ncol=2, nrow=1)
-ggsave('Output/box.png', height=6, width=10)
+ggsave("Output/box.png", height=6, width=10)
 
 
 
